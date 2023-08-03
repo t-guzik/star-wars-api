@@ -1,0 +1,9 @@
+*
+!/src
+!package*.json
+!.eslintrc.js
+!.prettierrc
+!tsconfig.build.json
+!tsconfig.json
+!nest-cli.json
+!docker-entrypoint.sh
