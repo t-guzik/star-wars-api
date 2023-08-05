@@ -1,7 +1,6 @@
 import { registerAs } from '@nestjs/config';
 import { Expose } from 'class-transformer';
 import { IsEnum, IsOptional, IsString, IsNumberString } from 'class-validator';
-import process from 'process';
 import { BooleanAsString } from '../types';
 import { castToBoolean } from '../utils';
 

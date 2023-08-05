@@ -1,7 +1,6 @@
 import { registerAs } from '@nestjs/config';
 import { Expose } from 'class-transformer';
 import { IsEnum, IsNumberString, IsOptional, IsString } from 'class-validator';
-import process from 'process';
 import { BooleanAsString } from '../types';
 import { castToBoolean } from '../utils';
 
@@ -14,17 +13,21 @@ export interface PostgresDatabaseConfigInterface {
   password: string;
   name: string;
   loggerEnabled: boolean;
+  connectionUri: string;
 }
 
 
 export const PostgresDatabaseConfig = registerAs<PostgresDatabaseConfigInterface, () => PostgresDatabaseConfigInterface>(PostgresDatabaseConfigToken, () => {
+  const {POSTGRES_HOST, POSTGRES_LOGGER_ENABLED, POSTGRES_NAME, POSTGRES_PASSWORD, POSTGRES_PORT, POSTGRES_USERNAME} = process.env;
+
   return {
-    host: process.env.POSTGRES_HOST,
-    port: process.env.POSTGRES_PORT,
-    username: process.env.POSTGRES_USERNAME,
-    password: process.env.POSTGRES_PASSWORD,
-    name: process.env.POSTGRES_NAME,
-    loggerEnabled: castToBoolean(process.env.POSTGRES_LOGGER_ENABLED as any),
+    host: POSTGRES_HOST,
+    port: POSTGRES_PORT,
+    username: POSTGRES_USERNAME,
+    password: POSTGRES_PASSWORD,
+    name: POSTGRES_NAME,
+    loggerEnabled: castToBoolean(POSTGRES_LOGGER_ENABLED as any),
+    connectionUri: `postgres://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_NAME}`,
   };
 });
 
