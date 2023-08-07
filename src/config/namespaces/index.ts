@@ -5,12 +5,7 @@ import { ServerConfig, ServerConfigEnvironmentVariables } from './server.config'
 import { LoggerConfig, LoggerConfigEnvironmentVariables } from './logger.config';
 import { CorsConfig, CorsConfigEnvironmentVariables } from './cors.config';
 
-export const ConfigFactories: ConfigFactory[] = [
-  CorsConfig,
-  PostgresDatabaseConfig,
-  LoggerConfig,
-  ServerConfig,
-];
+export const ConfigFactories: ConfigFactory[] = [CorsConfig, PostgresDatabaseConfig, LoggerConfig, ServerConfig];
 
 export class EnvVariables {
 }

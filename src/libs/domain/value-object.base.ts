@@ -47,17 +47,12 @@ export abstract class ValueObject<T> {
   }
 
   private checkIfEmpty(props: ValueObjectProps<T>): void {
-    if (
-      !isNotEmptyObject(props) ||
-      (this.isDomainPrimitive(props) && isEmpty(props.value))
-    ) {
+    if (!isNotEmptyObject(props) || (this.isDomainPrimitive(props) && isEmpty(props.value))) {
       throw new ArgumentNotProvidedException('Property cannot be empty');
     }
   }
 
-  private isDomainPrimitive(
-    obj: unknown,
-  ): obj is DomainPrimitive<T & (Primitives | Date)> {
+  private isDomainPrimitive(obj: unknown): obj is DomainPrimitive<T & (Primitives | Date)> {
     return Object.prototype.hasOwnProperty.call(obj, 'value');
   }
 }

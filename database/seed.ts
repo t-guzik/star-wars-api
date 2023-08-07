@@ -1,8 +1,8 @@
-import { QuerySqlToken } from 'slonik/src/types';
+import { SqlSqlToken } from 'slonik/src/types';
 import { getMigrator } from './getMigrator';
 import { seeds } from './seeds';
 
-export const seed = async (query: QuerySqlToken) => {
+export const seed = async (query: SqlSqlToken) => {
   console.log(`Executing seeds migrations...`);
 
   const {pool, migrator} = await getMigrator();

@@ -15,7 +15,6 @@ export interface CorsConfigInterface {
   preflightContinue: boolean;
 }
 
-
 export const CorsConfig = registerAs<CorsConfigInterface, () => CorsConfigInterface>(CorsConfigToken, () => {
   return {
     allowedHeaders: process.env.CORS_ALLOWED_HEADERS,

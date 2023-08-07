@@ -1,4 +1,4 @@
-import { QuerySqlToken } from 'slonik/src/types';
+import { SqlSqlToken } from 'slonik/src/types';
 import { charactersSeed } from './characters';
 
-export const seeds: QuerySqlToken[] = [charactersSeed];
+export const seeds: SqlSqlToken[] = [charactersSeed];

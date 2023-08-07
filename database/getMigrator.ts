@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-
 import { SlonikMigrator } from '@slonik/migrator';
 import { createPool } from 'slonik';
 import dotenv from 'dotenv';

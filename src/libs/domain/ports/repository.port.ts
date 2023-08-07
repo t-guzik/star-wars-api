@@ -1,14 +1,14 @@
 import type { EntityBase } from '../entity.base';
 
 export class Paginated<T> {
-  readonly total_count: number;
-  readonly size: number;
+  readonly totalCount: number;
+  readonly limit: number;
   readonly offset: number;
   readonly items: readonly T[];
 
   constructor(props: Paginated<T>) {
-    this.total_count = props.total_count;
-    this.size = props.size;
+    this.totalCount = props.totalCount;
+    this.limit = props.limit;
     this.offset = props.offset;
     this.items = props.items;
   }

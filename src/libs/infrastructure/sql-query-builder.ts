@@ -1,23 +1,26 @@
 import { sql } from 'slonik';
+import { SqlSqlToken } from 'slonik/src/types';
 
 import type { PaginatedQueryParams } from '../domain/ports/repository.port';
+import { ZodObject } from 'zod';
 
 export class SqlQueryBuilder<DbModel> {
+  protected readonly schemaName: string;
   protected readonly tableName: string;
+  protected readonly schema: ZodObject<any>;
 
-  protected filters: any[];
+  protected filters: SqlSqlToken[];
   protected pagination: Partial<PaginatedQueryParams<keyof DbModel>>;
 
-  constructor(tableName: string) {
+  constructor(schemaName: string, tableName: string, schema: ZodObject<any>) {
+    this.schemaName = schemaName;
     this.tableName = tableName;
+    this.schema = schema;
     this.filters = [];
     this.pagination = {};
   }
 
-  /**
-   * @param condition - should be sql.unsafe result
-   */
-  where(condition: any) {
+  where(condition: SqlSqlToken) {
     this.filters.push(condition);
 
     return this;
@@ -29,37 +32,50 @@ export class SqlQueryBuilder<DbModel> {
     return this;
   }
 
-  build() {
+  build(withCount = true) {
     let filters;
     let limit;
     let offset;
     let order;
 
     if (this.filters.length) {
-      filters = sql.unsafe`WHERE ${sql.join(
-        this.filters,
-        sql.fragment` AND `,
-      )}`;
+      filters = sql.type(this.schema)`WHERE ${sql.join(this.filters, sql` AND `)}`;
     }
 
     if (this.pagination.orderBy!=undefined) {
-      order = sql.unsafe`ORDER BY ${sql.fragment([
-        this.pagination.orderBy.field as string,
-      ])} ${sql.fragment([this.pagination.orderBy.param.toUpperCase()])}`;
+      order =
+        this.pagination.orderBy.param==='asc'
+          ? sql.type(this.schema)`ORDER BY ${sql.identifier([this.pagination.orderBy.field as string])} ASC`
+          :sql.type(this.schema)`ORDER BY ${sql.identifier([this.pagination.orderBy.field as string])} DESC`;
     }
 
     if (this.pagination.limit!=undefined) {
-      limit = sql.unsafe`LIMIT ${this.pagination.limit}`;
+      limit = sql`LIMIT ${this.pagination.limit}`;
     }
 
     if (this.pagination.offset!=undefined) {
-      offset = sql.unsafe`OFFSET ${this.pagination.offset}`;
+      offset = sql`OFFSET ${this.pagination.offset}`;
     }
 
-    return sql.unsafe`SELECT * FROM ${sql.fragment([this.tableName])}
-${filters || sql.fragment``}
-${order || sql.fragment``}
-${limit || sql.fragment``}
-${offset || sql.fragment``};`;
+    if (withCount) {
+      return sql.type(this.schema)`WITH filtered as (SELECT * FROM ${sql.identifier([
+        this.schemaName,
+        this.tableName,
+      ])} ${filters || sql``}),
+count AS (SELECT count(*) as count FROM filtered)
+SELECT *, CAST((SELECT count FROM count) AS integer) AS count
+FROM filtered
+${order || sql``}
+${limit || sql``}
+${offset || sql``};`;
+    }
+
+    return sql.type(this.schema)`
+SELECT *
+FROM ${sql.identifier([this.schemaName, this.tableName])}
+${filters || sql``}
+${order || sql``}
+${limit || sql``}
+${offset || sql``};`;
   }
 }

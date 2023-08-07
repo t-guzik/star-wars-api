@@ -1,4 +1,4 @@
 import { sql } from 'slonik';
-import { QuerySqlToken } from 'slonik/src/types';
+import { SqlSqlToken } from 'slonik/src/types';
 
-export const charactersSeed: QuerySqlToken = sql.unsafe``; // TODO implement
+export const charactersSeed: SqlSqlToken = sql``; // TODO implement

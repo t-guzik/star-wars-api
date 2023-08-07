@@ -1,11 +1,7 @@
-import { EpisodeEntity } from '../../../episodes/domain/entities/episode.entity';
-
 export interface CharacterProps {
   name: string;
   episodesIds: string[];
-  episodes: EpisodeEntity[];
-  planet?: string;
+  planet: string | null;
 }
 
-export type CreateCharacterProps = CharacterProps;
-
+export type CreateCharacterProps = Pick<CharacterProps, 'name' | 'planet'>;

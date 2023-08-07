@@ -16,9 +16,12 @@ export interface PostgresDatabaseConfigInterface {
   connectionUri: string;
 }
 
-
-export const PostgresDatabaseConfig = registerAs<PostgresDatabaseConfigInterface, () => PostgresDatabaseConfigInterface>(PostgresDatabaseConfigToken, () => {
-  const {POSTGRES_HOST, POSTGRES_LOGGER_ENABLED, POSTGRES_NAME, POSTGRES_PASSWORD, POSTGRES_PORT, POSTGRES_USERNAME} = process.env;
+export const PostgresDatabaseConfig = registerAs<
+  PostgresDatabaseConfigInterface,
+  () => PostgresDatabaseConfigInterface
+>(PostgresDatabaseConfigToken, () => {
+  const {POSTGRES_HOST, POSTGRES_LOGGER_ENABLED, POSTGRES_NAME, POSTGRES_PASSWORD, POSTGRES_PORT, POSTGRES_USERNAME} =
+    process.env;
 
   return {
     host: POSTGRES_HOST,

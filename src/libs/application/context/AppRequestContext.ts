@@ -5,16 +5,18 @@ export class AppRequestContext extends RequestContext {
 }
 
 export class RequestContextService {
-  static getContext(): AppRequestContext {
-    return RequestContext.currentContext.req;
+  static getContext(): AppRequestContext | null {
+    return RequestContext.currentContext?.req || null;
   }
 
   static setRequestId(id: string): void {
     const ctx = this.getContext();
-    ctx.requestId = id;
+    if (ctx) {
+      ctx.requestId = id;
+    }
   }
 
-  static getRequestId(): string {
-    return this.getContext().requestId;
+  static getRequestId() {
+    return this.getContext()?.requestId || 'UNKNOWN';
   }
 }
