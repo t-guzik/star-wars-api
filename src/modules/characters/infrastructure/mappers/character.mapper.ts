@@ -37,7 +37,7 @@ export class CharacterMapper implements Mapper<CharacterEntity, CharacterModel> 
     const props = entity.getProps();
     const response = new CharacterResponseDto(entity);
     response.name = props.name;
-    // response.episodes = entity.episodes.map(episode => episode.getProps().name);
+    response.episodes = entity.episodes.map(episode => episode.getProps().name);
 
     if (props.planet) {
       response.planet = props.planet;

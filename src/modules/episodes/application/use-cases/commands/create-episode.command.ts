@@ -15,17 +15,13 @@ export class CreateEpisodeCommand {
 
 @CommandHandler(CreateEpisodeCommand)
 export class CreateEpisodeUseCase implements ICommandHandler<CreateEpisodeCommand, AggregateID> {
-  constructor(
-    protected readonly repository: EpisodesRepository,
-  ) {
+  constructor(protected readonly repository: EpisodesRepository) {
   }
 
-  async execute(
-    command: CreateEpisodeCommand
-  ): Promise<AggregateID> {
+  async execute(command: CreateEpisodeCommand): Promise<AggregateID> {
     const existingEpisode = await this.repository.findOneByName(command.name);
     if (existingEpisode) {
-      throw new EpisodeAlreadyExistsException()
+      throw new EpisodeAlreadyExistsException();
     }
 
     const characterEntity = EpisodeEntity.create(command);

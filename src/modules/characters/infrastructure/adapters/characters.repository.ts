@@ -17,9 +17,10 @@ export const characterSchema = z.object({
   episodes_ids: z
     .preprocess((val: any) => (typeof val==='string' ? JSON.parse(val):val), z.array(z.string()))
     .transform(arr => JSON.stringify(arr)),
+  count: z.number().optional(),
 });
 
-export type CharacterModel = z.TypeOf<typeof characterSchema>;
+export type CharacterModel = Omit<z.TypeOf<typeof characterSchema>, 'count'>;
 
 @Injectable()
 export class CharacterRepositoryAdapter extends CharactersRepository<CharacterModel> {
@@ -44,7 +45,7 @@ export class CharacterRepositoryAdapter extends CharactersRepository<CharacterMo
     const query = new SqlQueryBuilder(this.schemaName, this.tableName, this.validationSchema);
 
     if (params.episodesIds) {
-      query.where(sql.type(this.validationSchema)`episodes_ids @> ${sql.jsonb(params.episodesIds)}`);
+      query.where(sql.type(this.validationSchema)`episodes_ids @> ${sql.jsonb(params.episodesIds[0])}`);
     }
 
     if (params.limit) {
@@ -71,14 +72,14 @@ export class CharacterRepositoryAdapter extends CharactersRepository<CharacterMo
       });
     }
 
-    const {rows, rowCount} = await this.pool.query(query.build());
+    const {rows} = await this.pool.query(query.build());
     const entities = rows.map(row => this.mapper.toDomain(row as CharacterModel));
 
     return new Paginated<CharacterEntity>({
       items: entities,
       offset: params.offset,
       limit: params.limit,
-      totalCount: rowCount,
+      totalCount: rows?.[0]?.count ?? 0,
     });
   }
 
@@ -96,11 +97,8 @@ export class CharacterRepositoryAdapter extends CharactersRepository<CharacterMo
   async update(entity: CharacterEntity): Promise<void> {
     const {name, planet, episodes_ids} = this.mapper.toPersistence(entity);
     const statement = sql.type(this.validationSchema)`
-    UPDATE ${sql.identifier([
-        this.schemaName,
-        this.tableName,
-    ])} SET
-    name = ${name}, planet = ${planet}, episodes_ids = ${JSON.stringify(episodes_ids)}
+    UPDATE ${sql.identifier([this.schemaName, this.tableName])} SET
+    name = ${name}, planet = ${planet}, episodes_ids = ${episodes_ids}
     WHERE id = ${entity.id}`;
 
     await this.writeQuery(statement, entity);

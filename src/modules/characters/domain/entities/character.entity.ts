@@ -1,6 +1,7 @@
 import { isEmpty } from 'class-validator';
 import { AggregateRoot } from '../../../../libs/domain/aggregate-root.base';
 import { ArgumentInvalidException, ArgumentNotProvidedException } from '../../../../libs/domain/exceptions';
+import { InvalidCharacterEpisodesAttached } from '../character.exceptions';
 import { CharacterProps, CreateCharacterProps } from '../types/character.types';
 import { v4 } from 'uuid';
 import { EpisodeEntity } from '../../../episodes/domain/entities/episode.entity';
@@ -42,9 +43,12 @@ export class CharacterEntity extends AggregateRoot<CharacterProps> {
     this.props.planet = null;
   }
 
-
-  setEpisodes(episodesIds: string[]) {
+  setEpisodesIds(episodesIds: string[]) {
     this.props.episodesIds = episodesIds;
+  }
+
+  hasEpisodeAssigned(episodesId: string): boolean {
+    return this.props.episodesIds.includes(episodesId);
   }
 
   validate(): void {
@@ -63,8 +67,12 @@ export class CharacterEntity extends AggregateRoot<CharacterProps> {
       throw new ArgumentInvalidException('Character episodes must be unique');
     }
 
-    if (this._episodes && episodesIds.length===this._episodes.length && this._episodes.every(episode => episodesIds.includes(episode.id))) {
-      throw new ArgumentInvalidException('Invalid character episodes attached');
+    if (
+      this._episodes &&
+      (episodesIds.length!==this._episodes.length ||
+        !this._episodes.every(episode => episodesIds.includes(episode.id)))
+    ) {
+      throw new InvalidCharacterEpisodesAttached();
     }
   }
 }

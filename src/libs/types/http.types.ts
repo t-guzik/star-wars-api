@@ -1,2 +1,1 @@
-export enum HttpHeader {
-}
+export enum HttpHeader {}

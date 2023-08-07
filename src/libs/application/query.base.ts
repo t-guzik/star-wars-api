@@ -1,7 +1,4 @@
-import type {
-  OrderBy,
-  PaginatedQueryParams,
-} from '../domain/ports/repository.port';
+import type { OrderBy, PaginatedQueryParams } from '../domain/ports/repository.port';
 
 export abstract class QueryBase {
 }
@@ -23,8 +20,5 @@ export abstract class PaginatedQueryBase<DbModelKey = string>
 }
 
 // Paginated query parameters
-export type PaginatedParams<Props, DbModelKey = string> = Omit<
-  Props,
-  'limit' | 'offset' | 'orderBy'
-> &
+export type PaginatedParams<Props, DbModelKey = string> = Omit<Props, 'limit' | 'offset' | 'orderBy'> &
   PaginatedQueryParams<DbModelKey>;

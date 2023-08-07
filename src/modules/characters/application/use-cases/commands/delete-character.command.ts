@@ -13,14 +13,10 @@ export class DeleteCharacterCommand {
 
 @CommandHandler(DeleteCharacterCommand)
 export class DeleteCharacterUseCase implements ICommandHandler<DeleteCharacterCommand, void> {
-  constructor(
-    protected readonly repository: CharactersRepository,
-  ) {
+  constructor(protected readonly repository: CharactersRepository) {
   }
 
-  async execute(
-    command: DeleteCharacterCommand
-  ): Promise<void> {
+  async execute(command: DeleteCharacterCommand): Promise<void> {
     const existingCharacter = await this.repository.findOneById(command.characterId);
     if (!existingCharacter) {
       throw new NotFoundException();

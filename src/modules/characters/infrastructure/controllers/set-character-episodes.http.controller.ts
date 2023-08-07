@@ -4,7 +4,9 @@ import {
   Controller,
   HttpStatus,
   Put,
-  Version, Param,
+  Version,
+  Param,
+  BadRequestException as BadRequestHttpException,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CommandBus } from '@nestjs/cqrs';
@@ -13,6 +15,7 @@ import { SwaggerApiTags } from '../../../../config/swagger';
 import { NotFoundException } from '../../../../libs/domain/exceptions';
 import { ApiErrorResponse } from '../../../../libs/infrastructure/dtos/responses/api-error.response';
 import { SetCharacterEpisodesCommand } from '../../application/use-cases/commands/set-character-episodes.command';
+import { InvalidCharacterEpisodesAttached } from '../../domain/character.exceptions';
 import { FindCharacterByIdRequestDto } from '../dtos/requests/find-character-by-id.request.dto';
 import { SetCharacterEpisodesRequestDto } from '../dtos/requests/set-character-episodes.request.dto';
 
@@ -33,10 +36,16 @@ export class SetCharacterEpisodesHttpController {
     @Body() {episodesIds}: SetCharacterEpisodesRequestDto,
   ): Promise<void> {
     try {
-      await this.commandBus.execute<SetCharacterEpisodesCommand>(new SetCharacterEpisodesCommand({characterId, episodesIds}));
+      await this.commandBus.execute<SetCharacterEpisodesCommand>(
+        new SetCharacterEpisodesCommand({characterId, episodesIds}),
+      );
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundHttpException(error.message);
+      }
+
+      if (error instanceof InvalidCharacterEpisodesAttached) {
+        throw new BadRequestHttpException('Invalid episodes');
       }
 
       throw error;

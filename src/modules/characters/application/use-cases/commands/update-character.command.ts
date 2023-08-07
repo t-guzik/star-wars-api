@@ -17,14 +17,10 @@ export class UpdateCharacterCommand {
 
 @CommandHandler(UpdateCharacterCommand)
 export class UpdateCharacterUseCase implements ICommandHandler<UpdateCharacterCommand, void> {
-  constructor(
-    protected readonly repository: CharactersRepository,
-  ) {
+  constructor(protected readonly repository: CharactersRepository) {
   }
 
-  async execute(
-    command: UpdateCharacterCommand
-  ): Promise<void> {
+  async execute(command: UpdateCharacterCommand): Promise<void> {
     const existingCharacter = await this.repository.findOneById(command.characterId);
     if (!existingCharacter) {
       throw new NotFoundException();

@@ -17,17 +17,13 @@ export class CreateCharacterCommand {
 
 @CommandHandler(CreateCharacterCommand)
 export class CreateCharacterUseCase implements ICommandHandler<CreateCharacterCommand, AggregateID> {
-  constructor(
-    protected readonly repository: CharactersRepository,
-  ) {
+  constructor(protected readonly repository: CharactersRepository) {
   }
 
-  async execute(
-    command: CreateCharacterCommand
-  ): Promise<AggregateID> {
+  async execute(command: CreateCharacterCommand): Promise<AggregateID> {
     const existingCharacter = await this.repository.findOneByName(command.name);
     if (existingCharacter) {
-      throw new CharacterAlreadyExistsException()
+      throw new CharacterAlreadyExistsException();
     }
 
     const characterEntity = CharacterEntity.create(command);

@@ -30,8 +30,8 @@ export class FindCharactersPaginatedListHttpController {
       new FindCharactersPaginatedListQuery({
         episodesIds,
         orderBy: hasOrderByAttributes ? {param: orderByParam, field: orderByField}:undefined,
-        offset: +offset,
-        limit: +limit,
+        offset,
+        limit,
       }),
     );
 

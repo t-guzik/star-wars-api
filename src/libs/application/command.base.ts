@@ -18,9 +18,7 @@ export class Command {
 
   constructor(props: CommandProps<unknown>) {
     if (!isNotEmptyObject(props)) {
-      throw new ArgumentNotProvidedException(
-        'Command props should not be empty',
-      );
+      throw new ArgumentNotProvidedException('Command props should not be empty');
     }
 
     this.id = props.id || v4();

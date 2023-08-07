@@ -13,35 +13,33 @@ import { SwaggerApiTags } from '../../../../config/swagger';
 import { AggregateID } from '../../../../libs/domain/entity.base';
 import { ApiErrorResponse } from '../../../../libs/infrastructure/dtos/responses/api-error.response';
 import { IdResponse } from '../../../../libs/infrastructure/dtos/responses/id.response.dto';
-import { CreateCharacterCommand } from '../../application/use-cases/commands/create-character.command';
-import { CharacterAlreadyExistsException } from '../../domain/character.exceptions';
-import { CreateCharacterRequestDto } from '../dtos/requests/create-character.request.dto';
+import { CreateEpisodeCommand } from '../../application/use-cases/commands/create-episode.command';
+import { EpisodeAlreadyExistsException } from '../../domain/episode.exceptions';
+import { CreateEpisodeRequestDto } from '../dtos/requests/create-episode.request.dto';
 
-@ApiTags(SwaggerApiTags.Characters)
+@ApiTags(SwaggerApiTags.Episodes)
 @Controller()
-export class CreateCharacterHttpController {
+export class CreateEpisodeHttpController {
   constructor(private readonly commandBus: CommandBus) {
   }
 
   @Version(HttpApiVersion.V1)
-  @ApiOperation({summary: 'Create a character'})
+  @ApiOperation({summary: 'Create an episode'})
   @ApiResponse({status: HttpStatus.OK, type: IdResponse})
   @ApiResponse({
     status: HttpStatus.CONFLICT,
-    description: CharacterAlreadyExistsException.message,
+    description: EpisodeAlreadyExistsException.message,
     type: ApiErrorResponse,
   })
   @ApiResponse({status: HttpStatus.BAD_REQUEST, type: ApiErrorResponse})
-  @Post(HttpApiRoutes.characters.create)
-  async createCharacter(@Body() body: CreateCharacterRequestDto): Promise<IdResponse> {
+  @Post(HttpApiRoutes.episodes.create)
+  async createCharacter(@Body() body: CreateEpisodeRequestDto): Promise<IdResponse> {
     try {
-      const result = await this.commandBus.execute<CreateCharacterCommand, AggregateID>(
-        new CreateCharacterCommand(body),
-      );
+      const result = await this.commandBus.execute<CreateEpisodeCommand, AggregateID>(new CreateEpisodeCommand(body));
 
       return new IdResponse(result);
     } catch (error) {
-      if (error instanceof CharacterAlreadyExistsException) {
+      if (error instanceof EpisodeAlreadyExistsException) {
         throw new ConflictHttpException(error.message);
       }
 

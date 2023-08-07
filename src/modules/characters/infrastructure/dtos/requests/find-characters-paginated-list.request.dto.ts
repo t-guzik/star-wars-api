@@ -9,7 +9,7 @@ const SortKeys: SortKey[] = ['created_at', 'name', 'planet'];
 export class FindCharactersPaginatedListRequestDto extends PaginatedQueryRequestDto<SortKey> {
   @ApiPropertyOptional({format: 'uuid'})
   @IsUUID('4', {each: true})
-  @Transform(({value}) => Array.isArray(value) ? value:[value])
+  @Transform(({value}) => (Array.isArray(value) ? value:[value]))
   @IsOptional()
   readonly episodesIds?: string[];
 

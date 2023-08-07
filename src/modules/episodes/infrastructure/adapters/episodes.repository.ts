@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { EpisodeEntity } from '../../domain/entities/episode.entity';
 import { EpisodesRepository } from '../../domain/ports/episodes.repository';
 import { EpisodeMapper } from '../mappers/episode.mapper';
-import { SqlQueryBuilder } from 'src/libs/infrastructure/sql-query-builder';
+import { SqlQueryBuilder } from '../../../../libs/infrastructure/sql-query-builder';
 
 export const episodeSchema = z.object({
   id: z.string().uuid(),

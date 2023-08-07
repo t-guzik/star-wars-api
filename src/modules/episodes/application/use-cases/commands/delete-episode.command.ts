@@ -13,14 +13,10 @@ export class DeleteEpisodeCommand {
 
 @CommandHandler(DeleteEpisodeCommand)
 export class DeleteEpisodeUseCase implements ICommandHandler<DeleteEpisodeCommand, void> {
-  constructor(
-    protected readonly repository: EpisodesRepository,
-  ) {
+  constructor(protected readonly repository: EpisodesRepository) {
   }
 
-  async execute(
-    command: DeleteEpisodeCommand
-  ): Promise<void> {
+  async execute(command: DeleteEpisodeCommand): Promise<void> {
     const existingEpisode = await this.repository.findOneById(command.episodeId);
     if (!existingEpisode) {
       throw new NotFoundException('Episode not found');
