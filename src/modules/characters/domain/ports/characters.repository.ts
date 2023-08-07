@@ -11,7 +11,9 @@ export abstract class CharactersRepository<DbModel extends ObjectLiteral = never
   CharacterEntity,
   DbModel
 > {
-  abstract findPaginated(params: Partial<FindQueryParams<DbModel>>): Promise<Paginated<CharacterEntity>>;
+  abstract findPaginated(params: FindQueryParams<DbModel>): Promise<Paginated<CharacterEntity>>;
+
+  abstract find(params: Pick<FindQueryParams<DbModel>, 'episodesIds'>): Promise<CharacterEntity[]>;
 
   abstract findOneByName(name: string): Promise<CharacterEntity | null>;
 

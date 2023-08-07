@@ -96,6 +96,8 @@ export abstract class EntityBase<EntityProps> {
 
   public abstract validate(): void;
 
+  public abstract onDelete(): Promise<void>;
+
   private validateProps(props: EntityProps): void {
     const MAX_PROPS = 50;
 

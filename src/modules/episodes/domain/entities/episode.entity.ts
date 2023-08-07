@@ -1,10 +1,11 @@
 import { isEmpty } from 'class-validator';
-import { EntityBase } from '../../../../libs/domain/entity.base';
+import { AggregateRoot } from '../../../../libs/domain/aggregate-root.base';
 import { ArgumentInvalidException } from '../../../../libs/domain/exceptions';
 import { v4 } from 'uuid';
+import { EpisodeDeletedDomainEvent } from '../events/episode-deleted.domain-event';
 import { EpisodeProps, CreateEpisodeProps } from '../types/episode.types';
 
-export class EpisodeEntity extends EntityBase<EpisodeProps> {
+export class EpisodeEntity extends AggregateRoot<EpisodeProps> {
   static create(create: CreateEpisodeProps): EpisodeEntity {
     const id = v4();
     const props: EpisodeProps = {
@@ -20,5 +21,11 @@ export class EpisodeEntity extends EntityBase<EpisodeProps> {
     if (isEmpty(name)) {
       throw new ArgumentInvalidException('Episode name cannot be empty');
     }
+  }
+
+  async onDelete() {
+    this.addEvent(new EpisodeDeletedDomainEvent({
+      aggregateId: this.id,
+    }))
   }
 }

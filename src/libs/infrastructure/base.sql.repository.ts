@@ -1,17 +1,24 @@
-import type { DatabasePool, IdentifierSqlToken, MixedRow, PrimitiveValueExpression } from 'slonik';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import type {
+  DatabasePool,
+  DatabaseTransactionConnection,
+  IdentifierSqlToken,
+  MixedRow,
+  PrimitiveValueExpression,
+} from 'slonik';
 import { sql } from 'slonik';
 import { SqlSqlToken } from 'slonik/src/types';
 import { ZodObject } from 'zod';
 import { RequestContextService } from '../application/context/AppRequestContext';
+import { AggregateRoot } from '../domain/aggregate-root.base';
 
 import type { Mapper } from './mapper.interface';
 import { ObjectLiteral } from '../types/base.types';
-import type { EntityBase } from '../domain/entity.base';
 import type { LoggerPort } from '../domain/ports/logger.port';
 import type { RepositoryPort, RepositoryPortConfig } from '../domain/ports/repository.port';
 
-export abstract class BaseSqlRepository<Entity extends EntityBase<unknown>, DbModel extends ObjectLiteral>
-  implements RepositoryPortConfig<DbModel>, Pick<RepositoryPort<Entity>, 'save' | 'findOneById' | 'delete'> {
+export abstract class BaseSqlRepository<Aggregate extends AggregateRoot<unknown>, DbModel extends ObjectLiteral>
+  implements RepositoryPortConfig<DbModel>, Pick<RepositoryPort<Aggregate>, 'save' | 'findOneById' | 'delete'> {
   abstract readonly schemaName: string;
   abstract readonly tableName: string;
   abstract readonly primaryKeys: string[];
@@ -19,13 +26,14 @@ export abstract class BaseSqlRepository<Entity extends EntityBase<unknown>, DbMo
   abstract readonly validationSchema: ZodObject<any>;
 
   protected constructor(
-    protected readonly mapper: Mapper<Entity, DbModel>,
-    protected readonly pool: DatabasePool,
+    protected readonly _pool: DatabasePool,
+    protected readonly mapper: Mapper<Aggregate, DbModel>,
+    protected readonly eventEmitter: EventEmitter2,
     protected readonly logger: LoggerPort,
   ) {
   }
 
-  async save(entity: Entity | Entity[]): Promise<void> {
+  async save(entity: Aggregate | Aggregate[]): Promise<void> {
     const entities = Array.isArray(entity) ? entity:[entity];
     const records = entities.map(this.mapper.toPersistence);
     const {propertiesNames, recordsValues} = BaseSqlRepository.generateRecordsValues(records);
@@ -43,7 +51,7 @@ export abstract class BaseSqlRepository<Entity extends EntityBase<unknown>, DbMo
     await this.writeQuery(query, entities);
   }
 
-  async delete(entity: Entity | Entity[]): Promise<boolean> {
+  async delete(entity: Aggregate | Aggregate[]): Promise<boolean> {
     if (!Array.isArray(entity)) {
       entity.validate();
       const query = sql.type(this.validationSchema)`DELETE FROM ${sql.identifier([
@@ -58,6 +66,9 @@ export abstract class BaseSqlRepository<Entity extends EntityBase<unknown>, DbMo
       );
 
       const result = await this.pool.query(query);
+
+      await entity.onDelete();
+      await entity.publishEvents(this.logger, this.eventEmitter);
 
       return result.rowCount > 0;
     }
@@ -81,10 +92,17 @@ export abstract class BaseSqlRepository<Entity extends EntityBase<unknown>, DbMo
       `,
     );
 
+    await Promise.all(
+      entity.map(async entity => {
+        await entity.onDelete();
+        await entity.publishEvents(this.logger, this.eventEmitter);
+      }),
+    );
+
     return result.rowCount > 0;
   }
 
-  async findOneById(id: string): Promise<Entity | null> {
+  async findOneById(id: string): Promise<Aggregate | null> {
     const query = sql.type(this.validationSchema)`SELECT * FROM ${sql.identifier([
         this.schemaName,
         this.tableName,
@@ -97,7 +115,7 @@ export abstract class BaseSqlRepository<Entity extends EntityBase<unknown>, DbMo
 
   protected async writeQuery<T>(
     sql: SqlSqlToken<T extends MixedRow ? T:Record<string, PrimitiveValueExpression>>,
-    entity: Entity | Entity[],
+    entity: Aggregate | Aggregate[],
   ) {
     const entities = Array.isArray(entity) ? entity:[entity];
     entities.forEach(entity => entity.validate());
@@ -110,11 +128,7 @@ export abstract class BaseSqlRepository<Entity extends EntityBase<unknown>, DbMo
 
     const result = await this.pool.query(sql);
 
-    // await Promise.all(
-    //   entities.map((entity) =>
-    //     entity.publishEvents(this.logger, this.eventEmitter),
-    //   ),
-    // );
+    await Promise.all(entities.map(entity => entity.publishEvents(this.logger, this.eventEmitter)));
 
     return result;
   }
@@ -141,5 +155,30 @@ export abstract class BaseSqlRepository<Entity extends EntityBase<unknown>, DbMo
     });
 
     return {propertiesNames, recordsValues};
+  }
+
+  public async transaction<T>(handler: () => Promise<T>): Promise<T> {
+    return this.pool.transaction(async connection => {
+      this.logger.debug(`[${RequestContextService.getRequestId()}] transaction started`);
+      if (!RequestContextService.getTransactionConnection()) {
+        RequestContextService.setTransactionConnection(connection);
+      }
+
+      try {
+        const result = await handler();
+        this.logger.debug(`[${RequestContextService.getRequestId()}] transaction committed`);
+
+        return result;
+      } catch (e) {
+        this.logger.debug(`[${RequestContextService.getRequestId()}] transaction aborted`);
+        throw e;
+      } finally {
+        RequestContextService.cleanTransactionConnection();
+      }
+    });
+  }
+
+  protected get pool(): DatabasePool | DatabaseTransactionConnection {
+    return RequestContextService.getContext()?.transactionConnection ?? this._pool;
   }
 }

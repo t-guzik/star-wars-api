@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { CorsConfigInterface, CorsConfigToken } from './config/namespaces/cors.config';
+import { ServerConfigInterface, ServerConfigToken } from './config/namespaces/server.config';
 import { GracefulShutdown } from './libs/bootstrap/graceful-shutdown';
 
 async function bootstrap() {
@@ -16,6 +17,7 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
   const corsConfig = configService.get<CorsConfigInterface>(CorsConfigToken)!;
+  const serverConfig = configService.get<ServerConfigInterface>(ServerConfigToken)!;
   app.enableCors(corsConfig);
   app.use(helmet());
 
@@ -23,9 +25,15 @@ async function bootstrap() {
 
   const options = new DocumentBuilder().build();
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('docs', app, document);
+  SwaggerModule.setup('docs', app, document, {
+    swaggerOptions: {
+      tryItOutEnabled: true,
+      tagsSorter: 'alpha',
+      operationsSorter: 'method',
+    },
+  });
 
-  await app.listen(3000);
+  await app.listen(serverConfig.port);
 }
 
 bootstrap();

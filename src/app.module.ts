@@ -15,6 +15,7 @@ import { ContextInterceptor } from './libs/application/context/ContextIntercepto
 import { GracefulShutdown } from './libs/bootstrap/graceful-shutdown';
 import { CharactersModule } from './modules/characters/infrastructure/characters.module';
 import { EpisodesModule } from './modules/episodes/infrastructure/episodes.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 const interceptors: Provider[] = [
   {
@@ -61,6 +62,7 @@ const pipes: Provider[] = [
       inject: [ConfigService],
     }),
     CqrsModule,
+    EventEmitterModule.forRoot(),
     CharactersModule,
     EpisodesModule,
   ],

@@ -22,6 +22,6 @@ export class DeleteEpisodeUseCase implements ICommandHandler<DeleteEpisodeComman
       throw new NotFoundException('Episode not found');
     }
 
-    await this.repository.delete(existingEpisode);
+    await this.repository.transaction(async () => this.repository.delete(existingEpisode));
   }
 }

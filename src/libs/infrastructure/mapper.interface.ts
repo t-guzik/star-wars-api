@@ -1,6 +1,6 @@
-import type { EntityBase } from '../domain/entity.base';
+import { AggregateRoot } from '../domain/aggregate-root.base';
 
-export interface Mapper<DomainEntity extends EntityBase<any>, DbRecord, Response = any> {
+export interface Mapper<DomainEntity extends AggregateRoot<any>, DbRecord, Response = any> {
   toPersistence(entity: DomainEntity): DbRecord;
 
   toDomain(record: any): DomainEntity;

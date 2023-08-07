@@ -8,7 +8,6 @@ export type CommandProps<T> = Omit<T, 'id'> & Partial<Command>;
 type CommandMetadata = {
   readonly correlationId?: string;
   readonly causationId?: string;
-  readonly userId?: string;
   readonly timestamp: string;
 };
 
@@ -26,7 +25,6 @@ export class Command {
       correlationId: props.metadata?.correlationId,
       causationId: props?.metadata?.causationId,
       timestamp: props?.metadata?.timestamp || new Date().toISOString(),
-      userId: props?.metadata?.userId,
     };
   }
 }

@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectPool } from 'nestjs-slonik';
 import { DatabasePool, sql } from 'slonik';
 import { z } from 'zod';
@@ -29,8 +30,8 @@ export class EpisodeRepositoryAdapter extends EpisodesRepository<EpisodeModel> {
     name: 'text',
   };
 
-  constructor(@InjectPool() readonly pool: DatabasePool, protected readonly mapper: EpisodeMapper) {
-    super(mapper, pool, new Logger('EpisodeRepository'));
+  constructor(@InjectPool() readonly _pool: DatabasePool, protected readonly mapper: EpisodeMapper, protected readonly eventEmitter: EventEmitter2) {
+    super(_pool, mapper, eventEmitter, new Logger('EpisodeRepository'));
   }
 
   async findByIds(ids: string[]): Promise<EpisodeEntity[]> {

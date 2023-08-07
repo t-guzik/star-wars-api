@@ -4,6 +4,9 @@ import { CreateCharacterUseCase } from '../application/use-cases/commands/create
 import { DeleteCharacterUseCase } from '../application/use-cases/commands/delete-character.command';
 import { SetCharacterEpisodesUseCase } from '../application/use-cases/commands/set-character-episodes.command';
 import { UpdateCharacterUseCase } from '../application/use-cases/commands/update-character.command';
+import {
+  UnassignCharacterEpisodeWhenEpisodeIsDeletedDomainEventHandler
+} from '../application/use-cases/event-handlers/unassign-character-episode-when-episode-is-deleted.domain-event-handler';
 import { FindCharacterUseCase } from '../application/use-cases/queries/find-character.query';
 import { FindCharactersPaginatedListUseCase } from '../application/use-cases/queries/find-characters-paginated-list.query';
 import { CharactersRepository } from '../domain/ports/characters.repository';
@@ -25,6 +28,8 @@ const useCases: Provider[] = [
   // Queries
   FindCharacterUseCase,
   FindCharactersPaginatedListUseCase,
+  // Event handlers
+  UnassignCharacterEpisodeWhenEpisodeIsDeletedDomainEventHandler,
 ];
 
 const adapters: Provider[] = [

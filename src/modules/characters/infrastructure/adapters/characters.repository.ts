@@ -1,11 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectPool } from 'nestjs-slonik';
 import { DatabasePool, sql } from 'slonik';
+import { z } from 'zod';
 import { Paginated } from '../../../../libs/domain/ports/repository.port';
 import { SqlQueryBuilder } from '../../../../libs/infrastructure/sql-query-builder';
 import { CharacterEntity } from '../../domain/entities/character.entity';
 import { CharactersRepository, FindQueryParams } from '../../domain/ports/characters.repository';
-import { z } from 'zod';
 import { CharacterMapper } from '../mappers/character.mapper';
 
 export const characterSchema = z.object({
@@ -37,15 +38,19 @@ export class CharacterRepositoryAdapter extends CharactersRepository<CharacterMo
     episodes_ids: 'jsonb',
   };
 
-  constructor(@InjectPool() readonly pool: DatabasePool, protected readonly mapper: CharacterMapper) {
-    super(mapper, pool, new Logger('CharacterRepository'));
+  constructor(
+    @InjectPool() readonly _pool: DatabasePool,
+    protected readonly mapper: CharacterMapper,
+    protected readonly eventEmitter: EventEmitter2,
+  ) {
+    super(_pool, mapper, eventEmitter, new Logger('CharacterRepository'));
   }
 
   async findPaginated(params: FindQueryParams<CharacterModel>): Promise<Paginated<CharacterEntity>> {
     const query = new SqlQueryBuilder(this.schemaName, this.tableName, this.validationSchema);
 
     if (params.episodesIds) {
-      query.where(sql.type(this.validationSchema)`episodes_ids @> ${sql.jsonb(params.episodesIds[0])}`);
+      query.where(sql.type(this.validationSchema)`episodes_ids @> ${sql.jsonb(params.episodesIds)}`);
     }
 
     if (params.limit) {
@@ -82,6 +87,19 @@ export class CharacterRepositoryAdapter extends CharactersRepository<CharacterMo
       totalCount: rows?.[0]?.count ?? 0,
     });
   }
+
+  async find(params: Pick<FindQueryParams<CharacterModel>, 'episodesIds'>): Promise<CharacterEntity[]> {
+    const query = new SqlQueryBuilder(this.schemaName, this.tableName, this.validationSchema);
+
+    if (params.episodesIds) {
+      query.where(sql.type(this.validationSchema)`episodes_ids @> ${sql.jsonb(params.episodesIds)}`);
+    }
+
+    const {rows} = await this.pool.query(query.build(false));
+
+    return rows.map(row => this.mapper.toDomain(row as CharacterModel));
+  }
+
 
   async findOneByName(name: string): Promise<CharacterEntity | null> {
     const query = sql.type(this.validationSchema)`SELECT * FROM ${sql.identifier([

@@ -75,4 +75,7 @@ export class CharacterEntity extends AggregateRoot<CharacterProps> {
       throw new InvalidCharacterEpisodesAttached();
     }
   }
+
+  async onDelete() {
+  }
 }
