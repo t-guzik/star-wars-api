@@ -19,6 +19,5 @@ export abstract class PaginatedQueryBase<DbModelKey = string>
   }
 }
 
-// Paginated query parameters
 export type PaginatedParams<Props, DbModelKey = string> = Omit<Props, 'limit' | 'offset' | 'orderBy'> &
   PaginatedQueryParams<DbModelKey>;

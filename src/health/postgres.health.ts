@@ -3,11 +3,6 @@ import { HealthIndicator, HealthIndicatorResult, HealthCheckError } from '@nestj
 import { InjectPool } from 'nestjs-slonik';
 import { DatabasePool, sql } from 'slonik';
 
-export interface Postgres {
-  name: string;
-  type: string;
-}
-
 @Injectable()
 export class PostgresHealthIndicator extends HealthIndicator {
   constructor(@InjectPool() private readonly pool: DatabasePool) {

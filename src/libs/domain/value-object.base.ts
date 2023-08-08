@@ -25,10 +25,6 @@ export abstract class ValueObject<T> {
     return obj instanceof ValueObject;
   }
 
-  /**
-   *  Check if two Value Objects are equal. Checks structural equality.
-   * @param vo ValueObject
-   */
   public equals(vo?: ValueObject<T>): boolean {
     if (vo === null || vo === undefined) {
       return false;

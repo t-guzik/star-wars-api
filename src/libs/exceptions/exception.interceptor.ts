@@ -11,7 +11,6 @@ export class ExceptionInterceptor implements NestInterceptor {
   intercept(_context: ExecutionContext, next: CallHandler): Observable<ExceptionBase> {
     return next.handle().pipe(
       catchError(err => {
-        // Logging for debugging purposes
         if (err.status >= 400 && err.status < 500) {
           this.logger.debug(`[${RequestContextService.getRequestId()}] ${err.message}`);
 
@@ -32,7 +31,6 @@ export class ExceptionInterceptor implements NestInterceptor {
           }
         }
 
-        // Adding request ID to error message
         if (!err.correlationId) {
           err.correlationId = RequestContextService.getRequestId();
         }
