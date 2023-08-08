@@ -1,4 +1,3 @@
-import process from 'process';
 import { BooleanAsString, Environment } from '../types';
 import { registerAs } from '@nestjs/config';
 import { Expose } from 'class-transformer';

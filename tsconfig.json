@@ -25,5 +25,8 @@
     "typeRoots": [
       "./src/**/*.d.ts"
     ]
-  }
+  },
+  "include": [
+    "./src/**/*.ts"
+  ]
 }

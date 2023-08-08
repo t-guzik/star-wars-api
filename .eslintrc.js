@@ -28,12 +28,12 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'warn',
-    'newline-before-return': 'error',
     "@typescript-eslint/no-empty-interface": [
       "error",
       {
         "allowSingleExtends": true
       }
     ],
+    'newline-before-return': 'error',
   },
 };
