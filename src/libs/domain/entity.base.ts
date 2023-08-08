@@ -91,6 +91,7 @@ export abstract class EntityBase<EntityProps> {
       id: this._id,
       ...plainProps,
     };
+
     return Object.freeze(result);
   }
 

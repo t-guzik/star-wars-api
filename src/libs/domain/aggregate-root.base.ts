@@ -27,6 +27,7 @@ export abstract class AggregateRoot<EntityProps> extends EntityBase<EntityProps>
             this.constructor.name
           } : ${this.id}`,
         );
+
         return eventEmitter.emitAsync(event.constructor.name, event);
       }),
     );

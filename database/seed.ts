@@ -2,20 +2,22 @@ import { SqlSqlToken } from 'slonik/src/types';
 import { getMigrator } from './getMigrator';
 import { seeds } from './seeds';
 
-export const seed = async (query: SqlSqlToken) => {
-  console.log(`Executing seeds migrations...`);
+export const seed = async (query: SqlSqlToken, name: string) => {
+  console.log(`Executing ${name} seeds migration...`);
 
   const {pool, migrator} = await getMigrator();
   await migrator.up();
   await pool.query(query);
 
-  console.log(`Seed migrations executed`);
+  console.log(`${name} seeds migration executed`);
 };
 
 async function runAll() {
-  await Promise.all(seeds.map(query => seed(query)))
+  for (const {token, name} of seeds) {
+    await seed(token, name)
+  }
 
-  console.log('done');
+  console.log('Seed finished');
 }
 
 runAll();

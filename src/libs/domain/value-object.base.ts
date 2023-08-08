@@ -33,6 +33,7 @@ export abstract class ValueObject<T> {
     if (vo===null || vo===undefined) {
       return false;
     }
+
     return JSON.stringify(this)===JSON.stringify(vo);
   }
 

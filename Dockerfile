@@ -16,7 +16,7 @@ RUN apk update && \
     apk add jq
 ENV NODE_ENV="development"
 COPY package*.json ./
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 COPY . ./
 RUN npm run build && \
     mkdir -p /usr/src/app/runtime && \
@@ -32,7 +32,7 @@ FROM base as prodDeps
 WORKDIR /usr/src/deps
 ENV NODE_ENV="production"
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm ci --only=production --legacy-peer-deps
 
 # Release build
 FROM base as API

@@ -17,6 +17,7 @@ export class ExceptionInterceptor implements NestInterceptor {
 
           const isClassValidatorError =
             Array.isArray(err?.response?.message) && typeof err?.response?.error === 'string' && err.status === 400;
+
           // Transforming class-validator errors to a different format
           if (isClassValidatorError) {
             err = new BadRequestException(
