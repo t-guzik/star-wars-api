@@ -3,7 +3,7 @@ import { DatabaseTransactionConnection } from 'slonik';
 
 export class AppRequestContext extends RequestContext {
   requestId: string;
-  transactionConnection?: DatabaseTransactionConnection; // For global transactions
+  transactionConnection?: DatabaseTransactionConnection;
 }
 
 export class RequestContextService {
@@ -28,9 +28,7 @@ export class RequestContextService {
     return ctx?.transactionConnection;
   }
 
-  static setTransactionConnection(
-    transactionConnection?: DatabaseTransactionConnection,
-  ): void {
+  static setTransactionConnection(transactionConnection?: DatabaseTransactionConnection): void {
     const ctx = this.getContext();
     if (ctx) {
       ctx.transactionConnection = transactionConnection;

@@ -2,7 +2,7 @@
 
 const apiLayerPaths = ['controller', 'dtos', 'request', 'response', 'dto\\.ts$', 'controller\\.ts$'];
 
-const applicationLayerPaths = ['application', '\\.service\\.ts$'];
+const applicationLayerPaths = ['application', '\\.query\\.ts$', '\\.command\\.ts$'];
 
 const infrastructureLayerPaths = ['infrastructure', 'infra', 'database', 'repository'];
 
@@ -40,20 +40,11 @@ module.exports = {
       },
     },
     {
-      name: 'no-infra-to-api-deps',
-      comment: 'Infrastructure layer cannot depend on api layer',
-      severity: 'error',
-      from: {path: infrastructureLayerPaths},
-      to: {
-        path: apiLayerPaths,
-      },
-    },
-    {
       name: 'no-command-query-to-api-deps',
       comment: 'Commands and Queries cannot depend on api layer',
       severity: 'error',
       from: {
-        path: ['query-handler\\.ts$', 'command-handler\\.ts$', 'command\\.ts$', 'service\\.ts$'],
+        path: ['command\\.ts$', 'query\\.ts$'],
       },
       to: {
         path: apiLayerPaths,

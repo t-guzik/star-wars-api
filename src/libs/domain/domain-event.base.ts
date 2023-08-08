@@ -24,15 +24,12 @@ export abstract class DomainEvent {
 
   constructor(props: DomainEventProps<unknown>) {
     if (!isNotEmptyObject(props)) {
-      throw new ArgumentNotProvidedException(
-        'DomainEvent props should not be empty',
-      );
+      throw new ArgumentNotProvidedException('DomainEvent props should not be empty');
     }
     this.id = v4();
     this.aggregateId = props.aggregateId;
     this.metadata = {
-      correlationId:
-        props?.metadata?.correlationId || RequestContextService.getRequestId(),
+      correlationId: props?.metadata?.correlationId || RequestContextService.getRequestId(),
       causationId: props?.metadata?.causationId,
       timestamp: props?.metadata?.timestamp || Date.now(),
     };

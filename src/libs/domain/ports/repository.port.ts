@@ -32,8 +32,9 @@ export interface RepositoryPortConfig<DbModel extends Record<string, unknown>> {
 
 export interface RepositoryPort<Entity extends EntityBase<unknown>> {
   save(entity: Entity | Entity[]): Promise<void>;
+  delete(entity: Entity): Promise<boolean>;
 
   findOneById(id: string): Promise<Entity | null>;
 
-  delete(entity: Entity): Promise<boolean>;
+  transaction<T>(handler: () => Promise<T>): Promise<T>;
 }

@@ -13,8 +13,8 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { SlonikModule } from 'nestjs-slonik';
 import { ContextInterceptor } from './libs/application/context/ContextInterceptor';
 import { GracefulShutdown } from './libs/bootstrap/graceful-shutdown';
-import { CharactersModule } from './modules/characters/infrastructure/characters.module';
-import { EpisodesModule } from './modules/episodes/infrastructure/episodes.module';
+import { CharacterModule } from './modules/character/character.module';
+import { EpisodeModule } from './modules/episode/episode.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 
 const interceptors: Provider[] = [
@@ -63,8 +63,8 @@ const pipes: Provider[] = [
     }),
     CqrsModule,
     EventEmitterModule.forRoot(),
-    CharactersModule,
-    EpisodesModule,
+    CharacterModule,
+    EpisodeModule,
   ],
   providers: [GracefulShutdown, ...interceptors, ...pipes],
 })
