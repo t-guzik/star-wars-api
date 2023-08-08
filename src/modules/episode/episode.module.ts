@@ -9,7 +9,13 @@ import { DeleteEpisodeHttpController } from './infrastructure/controllers/delete
 import { EPISODE_REPOSITORY } from './episode.di-tokens';
 import { EpisodeMapper } from './infrastructure/episode.mapper';
 
-const useCases: Provider[] = [CreateEpisodeUseCase, DeleteEpisodeUseCase, FindEpisodesByIdsUseCase];
+const useCases: Provider[] = [
+  // Commands
+  CreateEpisodeUseCase,
+  DeleteEpisodeUseCase,
+  //Queries
+  FindEpisodesByIdsUseCase,
+];
 
 const adapters: Provider[] = [
   {
