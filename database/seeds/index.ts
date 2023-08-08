@@ -10,5 +10,5 @@ export const seeds: { token: SqlSqlToken; name: string }[] = [
   {
     name: 'characters',
     token: charactersSeed,
-  }
+  },
 ];

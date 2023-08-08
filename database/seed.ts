@@ -14,7 +14,7 @@ export const seed = async (query: SqlSqlToken, name: string) => {
 
 async function runAll() {
   for (const {token, name} of seeds) {
-    await seed(token, name)
+    await seed(token, name);
   }
 
   console.log('Seed finished');
