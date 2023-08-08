@@ -50,7 +50,7 @@ http://localhost:3000/docs
 make run
 ````
 
-This command will build the Docker containers, start the services (postgres, pgadmin, api), and apply database migrations.
+This command will prepare env variables, build the Docker containers, start the services (postgres, pgadmin, api), and apply database migrations.
 
 To seed the database with initial data, run:
 
@@ -73,7 +73,7 @@ make run-e2e
 make run-e2e-tests
 ```
 
-These commands will prepare env variables, build the test containers, start the services, apply test database migrations, and run the E2E tests.
+These commands will build the test containers, start the services, apply test database migrations, and run the E2E tests.
 
 To stop the test environment and remove volumes, run:
 
