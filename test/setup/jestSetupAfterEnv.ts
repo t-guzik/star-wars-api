@@ -1,6 +1,6 @@
 import { Test, TestingModuleBuilder, TestingModule } from '@nestjs/testing';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { createPool, DatabasePool } from 'slonik';
+import { createPool, DatabasePool, sql } from 'slonik';
 import request from 'supertest';
 import { VersioningType } from '@nestjs/common';
 import { AppModule } from '../../src/app.module';
@@ -63,6 +63,8 @@ export function getHttpServer(): request.SuperTest<request.Test> {
 beforeAll(async (): Promise<void> => {
   ({ testServer } = await generateTestingApplication());
   pool = await createPool(postgresDatabaseConfig.connectionUri);
+  await pool.query(sql`TRUNCATE "star_wars"."characters"`);
+  await pool.query(sql`TRUNCATE "star_wars"."episodes"`);
 });
 
 // cleanup
