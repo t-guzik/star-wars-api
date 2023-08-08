@@ -33,18 +33,22 @@ export class CharacterEntity extends AggregateRoot<CharacterProps> {
 
   updateName(newName: string) {
     this.props.name = newName;
+    this.update();
   }
 
   setPlanet(planet: string) {
     this.props.planet = planet;
+    this.update();
   }
 
   removePlanet() {
     this.props.planet = null;
+    this.update();
   }
 
   setEpisodesIds(episodesIds: string[]) {
     this.props.episodesIds = episodesIds;
+    this.update();
   }
 
   hasEpisodeAssigned(episodesId: string): boolean {

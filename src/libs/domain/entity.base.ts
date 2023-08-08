@@ -45,6 +45,10 @@ export abstract class EntityBase<EntityProps> {
     this._id = id;
   }
 
+  protected update(): void {
+    this._updatedAt = new Date();
+  }
+
   get createdAt(): Date {
     return this._createdAt;
   }
