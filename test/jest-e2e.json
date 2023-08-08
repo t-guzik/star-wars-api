@@ -1,15 +1,9 @@
 {
-  "moduleFileExtensions": [
-    "js",
-    "json",
-    "ts"
-  ],
+  "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": ".",
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
-  "setupFilesAfterEnv": [
-    "<rootDir>/setup/jestSetupAfterEnv.ts"
-  ],
+  "setupFilesAfterEnv": ["<rootDir>/setup/jestSetupAfterEnv.ts"],
   "globalSetup": "<rootDir>/setup/jestGlobalSetup.ts",
   "transform": {
     "^.+\\.(t|j)s$": "@swc/jest"

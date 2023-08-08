@@ -21,22 +21,21 @@ import { UpdateCharacterRequestDto } from '../dtos/requests/update-character.req
 @ApiTags(SwaggerApiTags.Characters)
 @Controller()
 export class UpdateCharacterHttpController {
-  constructor(private readonly commandBus: CommandBus) {
-  }
+  constructor(private readonly commandBus: CommandBus) {}
 
   @Version(HttpApiVersion.V1)
-  @ApiOperation({summary: "Update character's attributes", description: "Update character's name or planet"})
-  @ApiResponse({status: HttpStatus.NO_CONTENT})
-  @ApiResponse({status: HttpStatus.BAD_REQUEST, type: ApiErrorResponse})
-  @ApiResponse({status: HttpStatus.NOT_FOUND, description: NotFoundException.message, type: ApiErrorResponse})
+  @ApiOperation({ summary: "Update character's attributes", description: "Update character's name or planet" })
+  @ApiResponse({ status: HttpStatus.NO_CONTENT })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, type: ApiErrorResponse })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: NotFoundException.message, type: ApiErrorResponse })
   @Patch(HttpApiRoutes.characters.update)
   @HttpCode(HttpStatus.NO_CONTENT)
   async updateCharacter(
-    @Param() {id: characterId}: FindCharacterByIdRequestDto,
+    @Param() { id: characterId }: FindCharacterByIdRequestDto,
     @Body() body: UpdateCharacterRequestDto,
   ): Promise<void> {
     try {
-      await this.commandBus.execute<UpdateCharacterCommand>(new UpdateCharacterCommand({characterId, ...body}));
+      await this.commandBus.execute<UpdateCharacterCommand>(new UpdateCharacterCommand({ characterId, ...body }));
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundHttpException(error.message);

@@ -7,8 +7,7 @@ import { CorsConfig, CorsConfigEnvironmentVariables } from './cors.config';
 
 export const ConfigFactories: ConfigFactory[] = [CorsConfig, PostgresDatabaseConfig, LoggerConfig, ServerConfig];
 
-export class EnvVariables {
-}
+export class EnvVariables {}
 
 export const EnvironmentVariablesValidators: ClassConstructor<EnvVariables>[] = [
   CorsConfigEnvironmentVariables,
@@ -17,6 +16,6 @@ export const EnvironmentVariablesValidators: ClassConstructor<EnvVariables>[] = 
   ServerConfigEnvironmentVariables,
 ];
 
-if (ConfigFactories.length!==EnvironmentVariablesValidators.length) {
+if (ConfigFactories.length !== EnvironmentVariablesValidators.length) {
   throw new Error('Missing config validator!');
 }

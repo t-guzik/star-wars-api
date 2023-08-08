@@ -18,7 +18,8 @@ import type { LoggerPort } from '../domain/ports/logger.port';
 import type { RepositoryPort, RepositoryPortConfig } from '../domain/ports/repository.port';
 
 export abstract class BaseSqlRepository<Aggregate extends AggregateRoot<unknown>, DbModel extends ObjectLiteral>
-  implements RepositoryPortConfig<DbModel>, Pick<RepositoryPort<Aggregate>, 'save' | 'findOneById' | 'delete'> {
+  implements RepositoryPortConfig<DbModel>, Pick<RepositoryPort<Aggregate>, 'save' | 'findOneById' | 'delete'>
+{
   abstract readonly schemaName: string;
   abstract readonly tableName: string;
   abstract readonly primaryKeys: string[];
@@ -30,13 +31,12 @@ export abstract class BaseSqlRepository<Aggregate extends AggregateRoot<unknown>
     protected readonly mapper: Mapper<Aggregate, DbModel>,
     protected readonly eventEmitter: EventEmitter2,
     protected readonly logger: LoggerPort,
-  ) {
-  }
+  ) {}
 
   async save(entity: Aggregate | Aggregate[]): Promise<void> {
-    const entities = Array.isArray(entity) ? entity:[entity];
+    const entities = Array.isArray(entity) ? entity : [entity];
     const records = entities.map(this.mapper.toPersistence);
-    const {propertiesNames, recordsValues} = BaseSqlRepository.generateRecordsValues(records);
+    const { propertiesNames, recordsValues } = BaseSqlRepository.generateRecordsValues(records);
 
     const query = sql.type(this.validationSchema)`INSERT INTO ${sql.identifier([
       this.schemaName,
@@ -75,7 +75,7 @@ export abstract class BaseSqlRepository<Aggregate extends AggregateRoot<unknown>
 
     const ids = entity.map(entity => entity.id);
 
-    if (ids.length===0) {
+    if (ids.length === 0) {
       return false;
     }
 
@@ -110,20 +110,20 @@ export abstract class BaseSqlRepository<Aggregate extends AggregateRoot<unknown>
 
     const result = await this.pool.query(query);
 
-    return result.rows[0] ? this.mapper.toDomain(result.rows[0]):null;
+    return result.rows[0] ? this.mapper.toDomain(result.rows[0]) : null;
   }
 
   protected async writeQuery<T>(
-    sql: SqlSqlToken<T extends MixedRow ? T:Record<string, PrimitiveValueExpression>>,
+    sql: SqlSqlToken<T extends MixedRow ? T : Record<string, PrimitiveValueExpression>>,
     entity: Aggregate | Aggregate[],
   ) {
-    const entities = Array.isArray(entity) ? entity:[entity];
+    const entities = Array.isArray(entity) ? entity : [entity];
     entities.forEach(entity => entity.validate());
 
     this.logger.debug(
       `[${RequestContextService.getRequestId()}] writing ${entities.length} entities to "${this.schemaName}"."${
         this.tableName
-      }" table: ${entities.map(({id}) => id).join(', ')}`,
+      }" table: ${entities.map(({ id }) => id).join(', ')}`,
     );
 
     const result = await this.pool.query(sql);
@@ -140,11 +140,11 @@ export abstract class BaseSqlRepository<Aggregate extends AggregateRoot<unknown>
 
     recordsEntries.forEach((recordEntries, index) => {
       recordEntries.forEach(entry => {
-        if (index===0) {
+        if (index === 0) {
           propertiesNames.push(sql.identifier([entry[0]]));
         }
 
-        if (entry[0] && entry[1]!==undefined) {
+        if (entry[0] && entry[1] !== undefined) {
           if (!Array.isArray(recordsValues[index])) {
             recordsValues[index] = [];
           }
@@ -154,7 +154,7 @@ export abstract class BaseSqlRepository<Aggregate extends AggregateRoot<unknown>
       });
     });
 
-    return {propertiesNames, recordsValues};
+    return { propertiesNames, recordsValues };
   }
 
   public async transaction<T>(handler: () => Promise<T>): Promise<T> {

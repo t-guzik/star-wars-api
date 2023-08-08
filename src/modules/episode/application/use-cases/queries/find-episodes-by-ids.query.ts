@@ -18,10 +18,9 @@ export class FindEpisodesByIdsQuery extends QueryBase {
 
 @QueryHandler(FindEpisodesByIdsQuery)
 export class FindEpisodesByIdsUseCase implements IQueryHandler {
-  constructor(@Inject(EPISODE_REPOSITORY) private readonly repository: EpisodeRepository) {
-  }
+  constructor(@Inject(EPISODE_REPOSITORY) private readonly repository: EpisodeRepository) {}
 
-  async execute({episodesIds}: FindEpisodesByIdsQuery): Promise<EpisodeEntity[]> {
+  async execute({ episodesIds }: FindEpisodesByIdsQuery): Promise<EpisodeEntity[]> {
     return this.repository.findByIds(episodesIds);
   }
 }

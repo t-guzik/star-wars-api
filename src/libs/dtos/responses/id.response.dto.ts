@@ -5,6 +5,6 @@ export class IdResponse {
     this.id = id;
   }
 
-  @ApiProperty({format: 'uuid'})
+  @ApiProperty({ format: 'uuid' })
   readonly id: string;
 }

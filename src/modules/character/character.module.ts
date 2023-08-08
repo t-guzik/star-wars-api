@@ -4,9 +4,7 @@ import { CreateCharacterUseCase } from './application/use-cases/commands/create-
 import { DeleteCharacterUseCase } from './application/use-cases/commands/delete-character.command';
 import { SetCharacterEpisodesUseCase } from './application/use-cases/commands/set-character-episodes.command';
 import { UpdateCharacterUseCase } from './application/use-cases/commands/update-character.command';
-import {
-  UnassignCharacterEpisodeWhenEpisodeIsDeletedEventHandler
-} from './application/event-handlers/unassign-character-episode-when-episode-is-deleted.event-handler';
+import { UnassignCharacterEpisodeWhenEpisodeIsDeletedEventHandler } from './application/event-handlers/unassign-character-episode-when-episode-is-deleted.event-handler';
 import { FindCharacterUseCase } from './application/use-cases/queries/find-character.query';
 import { FindCharactersPaginatedListUseCase } from './application/use-cases/queries/find-characters-paginated-list.query';
 import { CharacterRepositoryAdapter } from './infrastructure/adapters/character.repository';
@@ -53,5 +51,4 @@ const mappers: Provider[] = [CharacterMapper];
     FindCharactersPaginatedListHttpController,
   ],
 })
-export class CharacterModule {
-}
+export class CharacterModule {}

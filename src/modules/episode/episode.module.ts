@@ -25,5 +25,4 @@ const mappers: Provider[] = [EpisodeMapper];
   providers: [...useCases, ...adapters, ...mappers],
   controllers: [CreateEpisodeHttpController, DeleteEpisodeHttpController],
 })
-export class EpisodeModule {
-}
+export class EpisodeModule {}

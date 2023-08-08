@@ -12,11 +12,11 @@ export class EpisodeEntity extends AggregateRoot<EpisodeProps> {
       ...create,
     };
 
-    return new EpisodeEntity({id, props});
+    return new EpisodeEntity({ id, props });
   }
 
   validate(): void {
-    const {name} = this.props;
+    const { name } = this.props;
 
     if (isEmpty(name)) {
       throw new ArgumentInvalidException('Episode name cannot be empty');

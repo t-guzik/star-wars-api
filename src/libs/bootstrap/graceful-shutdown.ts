@@ -11,8 +11,7 @@ export class GracefulShutdown {
   constructor(
     @InjectPool() private readonly pool: DatabasePool,
     @Inject(ServerConfig.KEY) private readonly serverConfig: ServerConfigInterface,
-  ) {
-  }
+  ) {}
 
   public create(server: HttpServer) {
     createTerminus(server, {

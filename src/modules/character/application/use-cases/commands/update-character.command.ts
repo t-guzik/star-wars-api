@@ -19,21 +19,20 @@ export class UpdateCharacterCommand {
 
 @CommandHandler(UpdateCharacterCommand)
 export class UpdateCharacterUseCase implements ICommandHandler<UpdateCharacterCommand, void> {
-  constructor(@Inject(CHARACTER_REPOSITORY) private readonly repository: CharacterRepository) {
-  }
+  constructor(@Inject(CHARACTER_REPOSITORY) private readonly repository: CharacterRepository) {}
 
   async execute(command: UpdateCharacterCommand): Promise<void> {
     const existingCharacter = await this.repository.findOneById(command.characterId);
     if (!existingCharacter) {
       throw new NotFoundException();
     }
-    const {name} = existingCharacter.getProps();
+    const { name } = existingCharacter.getProps();
 
     existingCharacter.updateName(command.name || name);
 
     if (command.planet) {
       existingCharacter.setPlanet(command.planet);
-    } else if (command.planet===null) {
+    } else if (command.planet === null) {
       existingCharacter.removePlanet();
     }
 

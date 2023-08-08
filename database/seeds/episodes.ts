@@ -18,12 +18,12 @@ export const episodes: { id: string; name: string }[] = [
   },
 ];
 
-const {propertiesNames, recordsValues} = BaseSqlRepository.generateRecordsValues(episodes);
+const { propertiesNames, recordsValues } = BaseSqlRepository.generateRecordsValues(episodes);
 
 export const episodesSeed: SqlSqlToken = sql`
     INSERT INTO "star_wars"."episodes" (${sql.join(propertiesNames, sql`, `)}) SELECT * FROM ${sql.unnest(
-        recordsValues,
-        ['text', 'text'],
+  recordsValues,
+  ['text', 'text'],
 )}
     ON CONFLICT (id)
     DO NOTHING;`;

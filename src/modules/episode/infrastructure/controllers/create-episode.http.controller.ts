@@ -20,18 +20,17 @@ import { CreateEpisodeRequestDto } from '../dtos/requests/create-episode.request
 @ApiTags(SwaggerApiTags.Episodes)
 @Controller()
 export class CreateEpisodeHttpController {
-  constructor(private readonly commandBus: CommandBus) {
-  }
+  constructor(private readonly commandBus: CommandBus) {}
 
   @Version(HttpApiVersion.V1)
-  @ApiOperation({summary: 'Create an episode'})
-  @ApiResponse({status: HttpStatus.OK, type: IdResponse})
+  @ApiOperation({ summary: 'Create an episode' })
+  @ApiResponse({ status: HttpStatus.OK, type: IdResponse })
   @ApiResponse({
     status: HttpStatus.CONFLICT,
     description: EpisodeAlreadyExistsException.message,
     type: ApiErrorResponse,
   })
-  @ApiResponse({status: HttpStatus.BAD_REQUEST, type: ApiErrorResponse})
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, type: ApiErrorResponse })
   @Post(HttpApiRoutes.episodes.create)
   async createCharacter(@Body() body: CreateEpisodeRequestDto): Promise<IdResponse> {
     try {

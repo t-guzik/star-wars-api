@@ -20,7 +20,7 @@ export const PostgresDatabaseConfig = registerAs<
   PostgresDatabaseConfigInterface,
   () => PostgresDatabaseConfigInterface
 >(PostgresDatabaseConfigToken, () => {
-  const {POSTGRES_HOST, POSTGRES_LOGGER_ENABLED, POSTGRES_NAME, POSTGRES_PASSWORD, POSTGRES_PORT, POSTGRES_USERNAME} =
+  const { POSTGRES_HOST, POSTGRES_LOGGER_ENABLED, POSTGRES_NAME, POSTGRES_PASSWORD, POSTGRES_PORT, POSTGRES_USERNAME } =
     process.env;
 
   return {

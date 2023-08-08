@@ -20,18 +20,17 @@ import { CreateCharacterRequestDto } from '../dtos/requests/create-character.req
 @ApiTags(SwaggerApiTags.Characters)
 @Controller()
 export class CreateCharacterHttpController {
-  constructor(private readonly commandBus: CommandBus) {
-  }
+  constructor(private readonly commandBus: CommandBus) {}
 
   @Version(HttpApiVersion.V1)
-  @ApiOperation({summary: 'Create a character'})
-  @ApiResponse({status: HttpStatus.OK, type: IdResponse})
+  @ApiOperation({ summary: 'Create a character' })
+  @ApiResponse({ status: HttpStatus.OK, type: IdResponse })
   @ApiResponse({
     status: HttpStatus.CONFLICT,
     description: CharacterAlreadyExistsException.message,
     type: ApiErrorResponse,
   })
-  @ApiResponse({status: HttpStatus.BAD_REQUEST, type: ApiErrorResponse})
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, type: ApiErrorResponse })
   @Post(HttpApiRoutes.characters.create)
   async createCharacter(@Body() body: CreateCharacterRequestDto): Promise<IdResponse> {
     try {

@@ -16,11 +16,11 @@ export class CharacterEntity extends AggregateRoot<CharacterProps> {
       episodesIds: [],
     };
 
-    return new CharacterEntity({id, props});
+    return new CharacterEntity({ id, props });
   }
 
   get episodes() {
-    if (this._episodes===null) {
+    if (this._episodes === null) {
       throw new ArgumentNotProvidedException('Missing character episodes');
     }
 
@@ -56,24 +56,24 @@ export class CharacterEntity extends AggregateRoot<CharacterProps> {
   }
 
   validate(): void {
-    const {name, planet, episodesIds} = this.props;
+    const { name, planet, episodesIds } = this.props;
     const uniqueEpisodes = new Set(episodesIds);
 
     if (isEmpty(name)) {
       throw new ArgumentInvalidException('Character name cannot be empty');
     }
 
-    if (typeof planet==='string' && isEmpty(planet)) {
+    if (typeof planet === 'string' && isEmpty(planet)) {
       throw new ArgumentInvalidException('Character planet cannot be empty');
     }
 
-    if (uniqueEpisodes.size!==episodesIds.length) {
+    if (uniqueEpisodes.size !== episodesIds.length) {
       throw new ArgumentInvalidException('Character episodes must be unique');
     }
 
     if (
       this._episodes &&
-      (episodesIds.length!==this._episodes.length ||
+      (episodesIds.length !== this._episodes.length ||
         !this._episodes.every(episode => episodesIds.includes(episode.id)))
     ) {
       throw new InvalidCharacterEpisodesAttached();

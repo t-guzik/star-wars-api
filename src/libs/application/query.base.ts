@@ -1,11 +1,11 @@
 import type { OrderBy, PaginatedQueryParams } from '../domain/ports/repository.port';
 
-export abstract class QueryBase {
-}
+export abstract class QueryBase {}
 
 export abstract class PaginatedQueryBase<DbModelKey = string>
   extends QueryBase
-  implements PaginatedQueryParams<DbModelKey> {
+  implements PaginatedQueryParams<DbModelKey>
+{
   limit: number;
   offset: number;
   orderBy?: OrderBy<DbModelKey>;

@@ -15,8 +15,7 @@ export class DeleteCharacterCommand {
 
 @CommandHandler(DeleteCharacterCommand)
 export class DeleteCharacterUseCase implements ICommandHandler<DeleteCharacterCommand, void> {
-  constructor(@Inject(CHARACTER_REPOSITORY) private readonly repository: CharacterRepository) {
-  }
+  constructor(@Inject(CHARACTER_REPOSITORY) private readonly repository: CharacterRepository) {}
 
   async execute(command: DeleteCharacterCommand): Promise<void> {
     const existingCharacter = await this.repository.findOneById(command.characterId);

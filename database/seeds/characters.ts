@@ -55,12 +55,12 @@ const characters: { id: string; name: string; episodes_ids: string; planet: stri
   },
 ];
 
-const {propertiesNames, recordsValues} = BaseSqlRepository.generateRecordsValues(characters);
+const { propertiesNames, recordsValues } = BaseSqlRepository.generateRecordsValues(characters);
 
 export const charactersSeed: SqlSqlToken = sql`
     INSERT INTO "star_wars"."characters" (${sql.join(propertiesNames, sql`, `)}) SELECT * FROM ${sql.unnest(
-        recordsValues,
-        ['text', 'text', 'jsonb', 'text'],
+  recordsValues,
+  ['text', 'text', 'jsonb', 'text'],
 )}
     ON CONFLICT (id)
     DO NOTHING;`;

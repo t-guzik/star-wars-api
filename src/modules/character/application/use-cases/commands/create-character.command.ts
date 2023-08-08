@@ -19,8 +19,7 @@ export class CreateCharacterCommand {
 
 @CommandHandler(CreateCharacterCommand)
 export class CreateCharacterUseCase implements ICommandHandler<CreateCharacterCommand, AggregateID> {
-  constructor(@Inject(CHARACTER_REPOSITORY) private readonly repository: CharacterRepository) {
-  }
+  constructor(@Inject(CHARACTER_REPOSITORY) private readonly repository: CharacterRepository) {}
 
   async execute(command: CreateCharacterCommand): Promise<AggregateID> {
     const existingCharacter = await this.repository.findOneByName(command.name);

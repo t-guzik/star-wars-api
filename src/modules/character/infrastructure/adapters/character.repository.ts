@@ -116,7 +116,7 @@ export class CharacterRepositoryAdapter
   }
 
   async update(entity: CharacterEntity): Promise<void> {
-    const {name, planet, episodes_ids, updated_at} = this.mapper.toPersistence(entity);
+    const { name, planet, episodes_ids, updated_at } = this.mapper.toPersistence(entity);
     const statement = sql.type(this.validationSchema)`
     UPDATE ${sql.identifier([this.schemaName, this.tableName])} SET
     name = ${name}, planet = ${planet}, episodes_ids = ${episodes_ids}, updated_at = ${updated_at}

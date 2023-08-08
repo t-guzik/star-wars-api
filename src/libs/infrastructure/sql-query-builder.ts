@@ -27,7 +27,7 @@ export class SqlQueryBuilder<DbModel> {
   }
 
   paginate(pagination: Partial<PaginatedQueryParams<keyof DbModel>>) {
-    this.pagination = {...this.pagination, ...pagination};
+    this.pagination = { ...this.pagination, ...pagination };
 
     return this;
   }
@@ -42,18 +42,18 @@ export class SqlQueryBuilder<DbModel> {
       filters = sql.type(this.schema)`WHERE ${sql.join(this.filters, sql` AND `)}`;
     }
 
-    if (this.pagination.orderBy!=undefined) {
+    if (this.pagination.orderBy != undefined) {
       order =
-        this.pagination.orderBy.param==='asc'
+        this.pagination.orderBy.param === 'asc'
           ? sql.type(this.schema)`ORDER BY ${sql.identifier([this.pagination.orderBy.field as string])} ASC`
-          :sql.type(this.schema)`ORDER BY ${sql.identifier([this.pagination.orderBy.field as string])} DESC`;
+          : sql.type(this.schema)`ORDER BY ${sql.identifier([this.pagination.orderBy.field as string])} DESC`;
     }
 
-    if (this.pagination.limit!=undefined) {
+    if (this.pagination.limit != undefined) {
       limit = sql`LIMIT ${this.pagination.limit}`;
     }
 
-    if (this.pagination.offset!=undefined) {
+    if (this.pagination.offset != undefined) {
       offset = sql`OFFSET ${this.pagination.offset}`;
     }
 

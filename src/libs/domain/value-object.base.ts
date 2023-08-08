@@ -8,7 +8,7 @@ export interface DomainPrimitive<T extends Primitives | Date> {
   value: T;
 }
 
-type ValueObjectProps<T> = T extends Primitives | Date ? DomainPrimitive<T>:T;
+type ValueObjectProps<T> = T extends Primitives | Date ? DomainPrimitive<T> : T;
 
 export abstract class ValueObject<T> {
   protected readonly props: ValueObjectProps<T>;
@@ -30,11 +30,11 @@ export abstract class ValueObject<T> {
    * @param vo ValueObject
    */
   public equals(vo?: ValueObject<T>): boolean {
-    if (vo===null || vo===undefined) {
+    if (vo === null || vo === undefined) {
       return false;
     }
 
-    return JSON.stringify(this)===JSON.stringify(vo);
+    return JSON.stringify(this) === JSON.stringify(vo);
   }
 
   public unpack(): T {

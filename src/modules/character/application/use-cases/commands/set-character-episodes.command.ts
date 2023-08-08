@@ -22,14 +22,13 @@ export class SetCharacterEpisodesUseCase implements ICommandHandler<SetCharacter
   constructor(
     @Inject(CHARACTER_REPOSITORY) private readonly repository: CharacterRepository,
     private readonly queryBus: QueryBus,
-  ) {
-  }
+  ) {}
 
   async execute(command: SetCharacterEpisodesCommand): Promise<void> {
     const [existingCharacter, episodes] = await Promise.all([
       this.repository.findOneById(command.characterId),
       this.queryBus.execute<FindEpisodesByIdsQuery, EpisodeEntity[]>(
-        new FindEpisodesByIdsQuery({episodesIds: command.episodesIds}),
+        new FindEpisodesByIdsQuery({ episodesIds: command.episodesIds }),
       ),
     ]);
 

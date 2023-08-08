@@ -3,6 +3,6 @@ import { PaginatedResponseDto } from '../../../../../libs/dtos/responses/paginat
 import { CharacterResponseDto } from './characters.response.dto';
 
 export class CharactersPaginatedListResponseDto extends PaginatedResponseDto<CharacterResponseDto> {
-  @ApiProperty({type: CharacterResponseDto, isArray: true})
+  @ApiProperty({ type: CharacterResponseDto, isArray: true })
   readonly items: readonly CharacterResponseDto[];
 }

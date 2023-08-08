@@ -19,7 +19,7 @@ export interface CreateEntityProps<T> {
 }
 
 export abstract class EntityBase<EntityProps> {
-  constructor({id, props, createdAt, updatedAt}: CreateEntityProps<EntityProps>) {
+  constructor({ id, props, createdAt, updatedAt }: CreateEntityProps<EntityProps>) {
     this.setId(id);
     this.validateProps(props);
     const now = new Date();
@@ -62,11 +62,11 @@ export abstract class EntityBase<EntityProps> {
   }
 
   public equals(object?: EntityBase<EntityProps>): boolean {
-    if (object===null || object===undefined) {
+    if (object === null || object === undefined) {
       return false;
     }
 
-    if (this===object) {
+    if (this === object) {
       return true;
     }
 
@@ -74,7 +74,7 @@ export abstract class EntityBase<EntityProps> {
       return false;
     }
 
-    return this.id ? this.id===object.id:false;
+    return this.id ? this.id === object.id : false;
   }
 
   public getProps(): EntityProps & BaseEntityProps {
@@ -110,7 +110,7 @@ export abstract class EntityBase<EntityProps> {
       throw new ArgumentNotProvidedException('Entity props should not be empty');
     }
 
-    if (typeof props!=='object') {
+    if (typeof props !== 'object') {
       throw new ArgumentInvalidException('Entity props should be an object');
     }
 

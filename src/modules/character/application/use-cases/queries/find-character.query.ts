@@ -23,14 +23,13 @@ export class FindCharacterUseCase implements IQueryHandler {
   constructor(
     @Inject(CHARACTER_REPOSITORY) private readonly repository: CharacterRepository,
     private readonly queryBus: QueryBus,
-  ) {
-  }
+  ) {}
 
-  async execute({characterId}: FindCharacterQuery): Promise<CharacterEntity | null> {
+  async execute({ characterId }: FindCharacterQuery): Promise<CharacterEntity | null> {
     const character = await this.repository.findOneById(characterId);
     if (character) {
       const episodes = await this.queryBus.execute<FindEpisodesByIdsQuery, EpisodeEntity[]>(
-        new FindEpisodesByIdsQuery({episodesIds: character?.getProps().episodesIds}),
+        new FindEpisodesByIdsQuery({ episodesIds: character?.getProps().episodesIds }),
       );
       character.attachEpisodes(episodes);
     }

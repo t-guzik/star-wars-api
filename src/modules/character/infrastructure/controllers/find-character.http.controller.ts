@@ -21,18 +21,17 @@ import { CharacterMapper } from '../character.mapper';
 @ApiTags(SwaggerApiTags.Characters)
 @Controller()
 export class FindCharacterHttpController {
-  constructor(private readonly queryBus: QueryBus, private readonly mapper: CharacterMapper) {
-  }
+  constructor(private readonly queryBus: QueryBus, private readonly mapper: CharacterMapper) {}
 
   @Version(HttpApiVersion.V1)
-  @ApiOperation({summary: 'Find a character'})
-  @ApiResponse({status: HttpStatus.OK, type: CharacterResponseDto})
-  @ApiResponse({status: HttpStatus.BAD_REQUEST, type: ApiErrorResponse})
-  @ApiResponse({status: HttpStatus.NOT_FOUND, description: NotFoundException.message, type: ApiErrorResponse})
+  @ApiOperation({ summary: 'Find a character' })
+  @ApiResponse({ status: HttpStatus.OK, type: CharacterResponseDto })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, type: ApiErrorResponse })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: NotFoundException.message, type: ApiErrorResponse })
   @Get(HttpApiRoutes.characters.findOne)
-  async findCharacter(@Param() {id: characterId}: FindCharacterByIdRequestDto): Promise<CharacterResponseDto> {
+  async findCharacter(@Param() { id: characterId }: FindCharacterByIdRequestDto): Promise<CharacterResponseDto> {
     const entity = await this.queryBus.execute<FindCharacterQuery, CharacterEntity | null>(
-      new FindCharacterQuery({characterId}),
+      new FindCharacterQuery({ characterId }),
     );
     if (!entity) {
       throw new NotFoundHttpException(NotFoundException.message);

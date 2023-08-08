@@ -1,8 +1,8 @@
 import path from 'path';
 import { config } from 'dotenv';
 
-const envPath = path.resolve(__dirname, process.env.NODE_ENV==='test' ? '../../.env.test':'../../.env');
-config({path: envPath});
+const envPath = path.resolve(__dirname, process.env.NODE_ENV === 'test' ? '../../.env.test' : '../../.env');
+config({ path: envPath });
 import { PostgresDatabaseConfig } from '../../src/config/namespaces/postgres-database.config';
 
 module.exports = async (): Promise<void> => {

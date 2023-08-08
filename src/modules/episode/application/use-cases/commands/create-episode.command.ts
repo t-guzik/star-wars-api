@@ -17,8 +17,7 @@ export class CreateEpisodeCommand {
 
 @CommandHandler(CreateEpisodeCommand)
 export class CreateEpisodeUseCase implements ICommandHandler<CreateEpisodeCommand, AggregateID> {
-  constructor(@Inject(EPISODE_REPOSITORY) private readonly repository: EpisodeRepository) {
-  }
+  constructor(@Inject(EPISODE_REPOSITORY) private readonly repository: EpisodeRepository) {}
 
   async execute(command: CreateEpisodeCommand): Promise<AggregateID> {
     const existingEpisode = await this.repository.findOneByName(command.name);

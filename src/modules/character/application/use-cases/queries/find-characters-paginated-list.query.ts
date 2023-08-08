@@ -24,14 +24,13 @@ export class FindCharactersPaginatedListUseCase implements IQueryHandler {
   constructor(
     @Inject(CHARACTER_REPOSITORY) private readonly repository: CharacterRepository,
     private readonly queryBus: QueryBus,
-  ) {
-  }
+  ) {}
 
   async execute(query: FindCharactersPaginatedListQuery): Promise<Paginated<CharacterEntity>> {
     const characters = await this.repository.findPaginated(query);
     const episodesIds = characters.items.flatMap(item => item.getProps().episodesIds);
     const episodes = await this.queryBus.execute<FindEpisodesByIdsQuery, EpisodeEntity[]>(
-      new FindEpisodesByIdsQuery({episodesIds}),
+      new FindEpisodesByIdsQuery({ episodesIds }),
     );
 
     for (const character of characters.items) {

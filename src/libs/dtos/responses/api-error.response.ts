@@ -2,16 +2,16 @@ import { HttpStatus } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ApiErrorResponse {
-  @ApiProperty({example: HttpStatus.BAD_REQUEST})
+  @ApiProperty({ example: HttpStatus.BAD_REQUEST })
   readonly statusCode: number;
 
-  @ApiProperty({example: 'Validation Error'})
+  @ApiProperty({ example: 'Validation Error' })
   readonly message: string;
 
-  @ApiProperty({example: 'Bad Request'})
+  @ApiProperty({ example: 'Bad Request' })
   readonly error: string;
 
-  @ApiProperty({example: 'YevPQs'})
+  @ApiProperty({ example: 'YevPQs' })
   readonly correlationId: string;
 
   @ApiProperty({
