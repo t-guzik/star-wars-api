@@ -5,6 +5,7 @@ import {
   Param,
   Delete,
   Version,
+  HttpCode,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CommandBus } from '@nestjs/cqrs';
@@ -18,20 +19,18 @@ import { FindEpisodeByIdRequestDto } from '../dtos/requests/find-episode-by-id.r
 @ApiTags(SwaggerApiTags.Episodes)
 @Controller()
 export class DeleteEpisodeHttpController {
-  constructor(private readonly commandBus: CommandBus) {
-  }
+  constructor(private readonly commandBus: CommandBus) {}
 
   @Version(HttpApiVersion.V1)
-  @ApiOperation({summary: 'Delete an episode'})
-  @ApiResponse({status: HttpStatus.NO_CONTENT})
-  @ApiResponse({status: HttpStatus.BAD_REQUEST, type: ApiErrorResponse})
-  @ApiResponse({status: HttpStatus.NOT_FOUND, description: NotFoundException.message, type: ApiErrorResponse})
+  @ApiOperation({ summary: 'Delete an episode' })
+  @ApiResponse({ status: HttpStatus.NO_CONTENT })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, type: ApiErrorResponse })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: NotFoundException.message, type: ApiErrorResponse })
   @Delete(HttpApiRoutes.episodes.delete)
-  async deleteEpisode(@Param() {id: episodeId}: FindEpisodeByIdRequestDto): Promise<void> {
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteEpisode(@Param() { id: episodeId }: FindEpisodeByIdRequestDto): Promise<void> {
     try {
-      await this.commandBus.execute<DeleteEpisodeCommand, void>(new DeleteEpisodeCommand({episodeId}));
-
-      // TODO emit domain event and unassign from characters
+      await this.commandBus.execute<DeleteEpisodeCommand, void>(new DeleteEpisodeCommand({ episodeId }));
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundHttpException(error.message);

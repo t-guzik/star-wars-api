@@ -7,6 +7,7 @@ import {
   Version,
   Param,
   BadRequestException as BadRequestHttpException,
+  HttpCode,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CommandBus } from '@nestjs/cqrs';
@@ -22,22 +23,22 @@ import { SetCharacterEpisodesRequestDto } from '../dtos/requests/set-character-e
 @ApiTags(SwaggerApiTags.Characters)
 @Controller()
 export class SetCharacterEpisodesHttpController {
-  constructor(private readonly commandBus: CommandBus) {
-  }
+  constructor(private readonly commandBus: CommandBus) {}
 
   @Version(HttpApiVersion.V1)
-  @ApiOperation({summary: 'Assign episodes to a character'})
-  @ApiResponse({status: HttpStatus.NO_CONTENT})
-  @ApiResponse({status: HttpStatus.BAD_REQUEST, type: ApiErrorResponse})
-  @ApiResponse({status: HttpStatus.NOT_FOUND, description: NotFoundException.message, type: ApiErrorResponse})
+  @ApiOperation({ summary: 'Assign episodes to a character' })
+  @ApiResponse({ status: HttpStatus.NO_CONTENT })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, type: ApiErrorResponse })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: NotFoundException.message, type: ApiErrorResponse })
   @Put(HttpApiRoutes.characters.setEpisodes)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async setCharacterEpisodes(
-    @Param() {id: characterId}: FindCharacterByIdRequestDto,
-    @Body() {episodesIds}: SetCharacterEpisodesRequestDto,
+    @Param() { id: characterId }: FindCharacterByIdRequestDto,
+    @Body() { episodesIds }: SetCharacterEpisodesRequestDto,
   ): Promise<void> {
     try {
       await this.commandBus.execute<SetCharacterEpisodesCommand>(
-        new SetCharacterEpisodesCommand({characterId, episodesIds}),
+        new SetCharacterEpisodesCommand({ characterId, episodesIds }),
       );
     } catch (error) {
       if (error instanceof NotFoundException) {

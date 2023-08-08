@@ -21,12 +21,10 @@
     "esModuleInterop": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "pretty": true,
-    "typeRoots": [
-      "./src/**/*.d.ts"
-    ]
+    "pretty": true
   },
   "include": [
-    "./src/**/*.ts"
+    "src/**/*.ts",
+    "test/**/*.ts"
   ]
 }

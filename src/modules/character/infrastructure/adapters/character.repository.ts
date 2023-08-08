@@ -17,7 +17,7 @@ export const characterSchema = z.object({
   name: z.string().min(1).max(256),
   planet: z.string().min(1).max(256).nullable(),
   episodes_ids: z
-    .preprocess((val: any) => (typeof val==='string' ? JSON.parse(val):val), z.array(z.string()))
+    .preprocess((val: any) => (typeof val === 'string' ? JSON.parse(val) : val), z.array(z.string()))
     .transform(arr => JSON.stringify(arr)),
   count: z.number().optional(),
 });
@@ -27,7 +27,8 @@ export type CharacterModel = Omit<z.TypeOf<typeof characterSchema>, 'count'>;
 @Injectable()
 export class CharacterRepositoryAdapter
   extends BaseSqlRepository<CharacterEntity, CharacterModel>
-  implements CharacterRepository<CharacterModel> {
+  implements CharacterRepository<CharacterModel>
+{
   readonly tableName = 'characters';
   readonly schemaName = 'star_wars';
   readonly primaryKeys = ['id'];
@@ -57,11 +58,11 @@ export class CharacterRepositoryAdapter
     }
 
     if (params.limit) {
-      query.paginate({limit: params.limit});
+      query.paginate({ limit: params.limit });
     }
 
     if (params.offset) {
-      query.paginate({offset: params.offset});
+      query.paginate({ offset: params.offset });
     }
 
     if (params.orderBy) {
@@ -80,7 +81,7 @@ export class CharacterRepositoryAdapter
       });
     }
 
-    const {rows} = await this.pool.query(query.build());
+    const { rows } = await this.pool.query(query.build());
     const entities = rows.map(row => this.mapper.toDomain(row as CharacterModel));
 
     return new Paginated<CharacterEntity>({
@@ -98,24 +99,24 @@ export class CharacterRepositoryAdapter
       query.where(sql.type(this.validationSchema)`episodes_ids @> ${sql.jsonb(params.episodesIds)}`);
     }
 
-    const {rows} = await this.pool.query(query.build(false));
+    const { rows } = await this.pool.query(query.build(false));
 
     return rows.map(row => this.mapper.toDomain(row as CharacterModel));
   }
 
   async findOneByName(name: string): Promise<CharacterEntity | null> {
     const query = sql.type(this.validationSchema)`SELECT * FROM ${sql.identifier([
-        this.schemaName,
-        this.tableName,
+      this.schemaName,
+      this.tableName,
     ])} WHERE name = ${name}`;
 
     const result = await this.pool.query(query);
 
-    return result.rows[0] ? this.mapper.toDomain(result.rows[0]):null;
+    return result.rows[0] ? this.mapper.toDomain(result.rows[0]) : null;
   }
 
   async update(entity: CharacterEntity): Promise<void> {
-    const {name, planet, episodes_ids} = this.mapper.toPersistence(entity);
+    const { name, planet, episodes_ids } = this.mapper.toPersistence(entity);
     const statement = sql.type(this.validationSchema)`
     UPDATE ${sql.identifier([this.schemaName, this.tableName])} SET
     name = ${name}, planet = ${planet}, episodes_ids = ${episodes_ids}

@@ -1,6 +1,6 @@
 // Roots
-const charactersRoot = 'characters';
-const episodesRoot = 'episodes';
+export const charactersRoot = 'characters';
+export const episodesRoot = 'episodes';
 
 export enum HttpApiVersion {
   V1 = '1',

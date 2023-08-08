@@ -10,17 +10,13 @@ import { GracefulShutdown } from './libs/bootstrap/graceful-shutdown';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
-  app.enableVersioning({
-    type: VersioningType.URI,
-  });
-
   const configService = app.get(ConfigService);
   const corsConfig = configService.get<CorsConfigInterface>(CorsConfigToken)!;
   const serverConfig = configService.get<ServerConfigInterface>(ServerConfigToken)!;
+
+  app.enableVersioning({ type: VersioningType.URI });
   app.enableCors(corsConfig);
   app.use(helmet());
-
   app.get(GracefulShutdown).create(app.getHttpServer());
 
   const options = new DocumentBuilder().build();

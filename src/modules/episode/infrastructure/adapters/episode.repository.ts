@@ -21,7 +21,8 @@ export type EpisodeModel = z.TypeOf<typeof episodeSchema>;
 @Injectable()
 export class EpisodeRepositoryAdapter
   extends BaseSqlRepository<EpisodeEntity, EpisodeModel>
-  implements EpisodeRepository {
+  implements EpisodeRepository
+{
   readonly tableName = 'episodes';
   readonly schemaName = 'star_wars';
   readonly primaryKeys = ['id'];
@@ -46,19 +47,19 @@ export class EpisodeRepositoryAdapter
 
     query.where(sql.type(this.validationSchema)`id = ANY(${sql.array(ids, 'text')})`);
 
-    const {rows} = await this.pool.query(query.build(false));
+    const { rows } = await this.pool.query(query.build(false));
 
     return rows.map(row => this.mapper.toDomain(row as EpisodeModel));
   }
 
   async findOneByName(name: string): Promise<EpisodeEntity | null> {
     const query = sql.type(this.validationSchema)`SELECT * FROM ${sql.identifier([
-        this.schemaName,
-        this.tableName,
+      this.schemaName,
+      this.tableName,
     ])} WHERE name = ${name}`;
 
     const result = await this.pool.query(query);
 
-    return result.rows[0] ? this.mapper.toDomain(result.rows[0]):null;
+    return result.rows[0] ? this.mapper.toDomain(result.rows[0]) : null;
   }
 }

@@ -5,6 +5,7 @@ import {
   Param,
   Delete,
   Version,
+  HttpCode,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CommandBus } from '@nestjs/cqrs';
@@ -18,18 +19,18 @@ import { FindCharacterByIdRequestDto } from '../dtos/requests/find-character-by-
 @ApiTags(SwaggerApiTags.Characters)
 @Controller()
 export class DeleteCharacterHttpController {
-  constructor(private readonly commandBus: CommandBus) {
-  }
+  constructor(private readonly commandBus: CommandBus) {}
 
   @Version(HttpApiVersion.V1)
-  @ApiOperation({summary: 'Delete a character'})
-  @ApiResponse({status: HttpStatus.NO_CONTENT})
-  @ApiResponse({status: HttpStatus.BAD_REQUEST, type: ApiErrorResponse})
-  @ApiResponse({status: HttpStatus.NOT_FOUND, description: NotFoundException.message, type: ApiErrorResponse})
+  @ApiOperation({ summary: 'Delete a character' })
+  @ApiResponse({ status: HttpStatus.NO_CONTENT })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, type: ApiErrorResponse })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: NotFoundException.message, type: ApiErrorResponse })
   @Delete(HttpApiRoutes.characters.delete)
-  async deleteCharacter(@Param() {id: characterId}: FindCharacterByIdRequestDto): Promise<void> {
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteCharacter(@Param() { id: characterId }: FindCharacterByIdRequestDto): Promise<void> {
     try {
-      await this.commandBus.execute<DeleteCharacterCommand, void>(new DeleteCharacterCommand({characterId}));
+      await this.commandBus.execute<DeleteCharacterCommand, void>(new DeleteCharacterCommand({ characterId }));
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundHttpException(error.message);

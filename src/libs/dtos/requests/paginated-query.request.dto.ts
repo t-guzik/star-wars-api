@@ -6,28 +6,28 @@ import { OrderBy } from '../../domain/ports/repository.port';
 const OrderParams: OrderBy['param'][] = ['asc', 'desc'];
 
 export abstract class OrderByQueryRequestDto<SortKey> {
-  abstract readonly orderByField: SortKey;
+  abstract readonly orderByField?: SortKey;
 
-  @ApiPropertyOptional({type: String, enum: OrderParams, default: 'desc'})
+  @ApiPropertyOptional({ type: String, enum: OrderParams, default: 'desc' })
   @IsEnum(OrderParams)
   @IsOptional()
-  readonly orderByParam?: OrderBy['param'];
+  readonly orderByParam?: OrderBy['param'] = 'desc';
 }
 
 export abstract class PaginatedQueryRequestDto<SortKey> extends OrderByQueryRequestDto<SortKey> {
-  @ApiPropertyOptional({default: 20})
+  @ApiPropertyOptional({ default: 20 })
   @IsInt()
   @Min(0)
   @Max(1000)
   @Type(() => Number)
-  @Transform(({value}) => +value)
+  @Transform(({ value }) => +value)
   readonly limit: number = 20;
 
-  @ApiPropertyOptional({default: 0})
+  @ApiPropertyOptional({ default: 0 })
   @IsInt()
   @Min(0)
   @Type(() => Number)
   @IsOptional()
-  @Transform(({value}) => +value)
+  @Transform(({ value }) => +value)
   readonly offset: number = 0;
 }
